@@ -1,13 +1,14 @@
 const express = require("express");
-const applyMiddlewares = require("./middlewares");
-const applyRoutes = require("./routes");
+const app = express();
 
 const { log } = require("./common/Logger");
-const { init } = require("./common/Io");
-const Mongoose = require("./common/Mongoose");
 
-const app = express();
+require("./common/Mongoose");
+
+const applyMiddlewares = require("./middlewares");
 applyMiddlewares(app);
+
+const applyRoutes = require("./routes");
 applyRoutes(app);
 
 let port = process.env.APP_PORT || 8000;
@@ -17,6 +18,7 @@ const server = app
   })
   .on("error", handleServerError);
 
+const { init } = require("./common/Io");
 init(server);
 
 function handleServerError(err) {
