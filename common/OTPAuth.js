@@ -1,8 +1,8 @@
 const OTPAuth = require("otpauth");
-const User = require("../models/User");
+const User = require("#models/User.js");
 const { generateBase32 } = require("./Hasher");
 const QRCode = require("qrcode");
-const { OtpSecretError } = require("../enum/Error");
+const { OtpSecretError } = require("#enum/Error.js");
 
 /**
  * Generates a TOTP secret and URL for the specified user.

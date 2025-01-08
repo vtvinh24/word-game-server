@@ -1,6 +1,5 @@
-const { WEEKDAY, CITIZEN_ID_TYPE, USER_STATUS, ROLE } = require("../enum/Fields");
-const { LOCALE } = require("../enum/Locale");
-const { log } = require("./Logger");
+const { USER_STATUS, ROLE } = require("#enum/Fields.js");
+const { LOCALE } = require("#enum/Locale.js");
 
 /**
  * This function checks if the given email is valid
@@ -12,17 +11,6 @@ const isEmail = (email) => {
 };
 
 /**
- * This function checks if the given phone number is valid
- *
- * Accepts phone number with 9-10 digits starting with 0 or +[phone country code]
- * @param {string} phone
- * @returns
- */
-const isPhone = (phone) => {
-  return /^0\d{9,10}$/.test(phone) || /^\+\d+$/.test(phone);
-};
-
-/**
  * This function checks if the given id is a valid MongoDB ObjectId, which is a 24-character hexadecimal string
  * @param {string} id
  * @returns {boolean}
@@ -30,26 +18,6 @@ const isPhone = (phone) => {
 const isMongoId = (id) => {
   const pattern = /^[0-9a-fA-F]{24}$/;
   return pattern.test(id);
-};
-
-/**
- * This function checks if the given weekday is valid. The weekday must be uppercase and in English
- * @param {string} weekday
- * @returns {boolean}
- */
-const isWeekday = (weekday) => {
-  return WEEKDAY.includes(weekday);
-};
-
-/**
- * This function checks if the given date is in the future
- * @param {Date} date
- * @returns {boolean}
- */
-const isFutureDate = (date) => {
-  const today = new Date();
-  const inputDate = new Date(date);
-  return inputDate > today;
 };
 
 /**
@@ -135,10 +103,7 @@ const isBase64 = (str) => {
 
 module.exports = {
   isEmail,
-  isPhone,
   isMongoId,
-  isWeekday,
-  isFutureDate,
   isNumeric,
   isAlphaNumeric,
   isCountry,

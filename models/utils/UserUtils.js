@@ -1,5 +1,5 @@
-const { isEmail, isPhone } = require("../../common/Validator");
-const User = require("../User");
+const { isEmail } = require("#common/Validator.js");
+const User = require("#models/User.js");
 
 /**
  * This function filters the user object to remove the auth field
@@ -11,7 +11,7 @@ function filteredUser(user) {
     throw new Error("Invalid user object");
   }
   const { auth, ...userWithoutAuth } = user.toObject();
-  const filtered = Object.fromEntries(Object.entries(userWithoutAuth).filter(([ _, v ]) => v != null));
+  const filtered = Object.fromEntries(Object.entries(userWithoutAuth).filter(([_, v]) => v != null));
   return filtered;
 }
 
@@ -45,7 +45,6 @@ function getFullName(user, reverse = false) {
  *
  * @async
  * @param {string} email The email of the user
- * @param {string} phone The phone of the user
  *
  * @returns {string} The generated username
  *
@@ -53,27 +52,15 @@ function getFullName(user, reverse = false) {
  *
  * @example
  * const user = new User({ email: "abc123@mail.com" });
- * const username = await generateUsername(user);
+ * const username = await generateUsername(user.email);
  * console.log(username); // "abc123" if no other user has the similar email/username, otherwise "abc123-1", "abc123-2", etc.
  */
-async function generateUsername(email, phone) {
-  if (!email && !phone) {
-    throw new Error("Email or phone is required");
-  }
-  if (email && !isEmail(email)) {
+async function generateUsername(email) {
+  if (!email || !isEmail(email)) {
     throw new Error("Invalid email");
   }
-  if (phone && !isPhone(phone)) {
-    throw new Error("Invalid phone");
-  }
 
-  let username = "";
-
-  if (email) {
-    username = email.split("@")[0];
-  } else if (phone) {
-    username = phone;
-  }
+  let username = email.split("@")[0];
 
   const matchedUsers = await User.find({ username: new RegExp(`^${username}`, "i") }).countDocuments();
 

@@ -4,9 +4,9 @@ const express = require("express");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const cookieParser = require("cookie-parser");
-const { log } = require("../common/Logger");
+const { log } = require("#common/Logger.js");
 const { JwtMiddleware } = require("./JWT");
-const initializeCronJobs = require("../services/Cron");
+const initializeCronJobs = require("#services/Cron.js");
 const isDev = process.env.NODE_ENV === "development";
 
 module.exports = function applyMiddlewares(app) {

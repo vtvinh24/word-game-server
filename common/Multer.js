@@ -4,7 +4,7 @@ const { createDirectory } = require("./File");
 
 const storage = multer.diskStorage({
   destination: async (req, file, cb) => {
-    const uploadDir = path.join(__dirname, "../", process.env.DIR_MEDIA, new Date().toISOString().split("T")[0]);
+    const uploadDir = path.join(__dirname, "", process.env.DIR_MEDIA, new Date().toISOString().split("T")[0]);
     await createDirectory(uploadDir);
     cb(null, uploadDir);
   },

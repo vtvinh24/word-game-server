@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const { format } = require("date-fns");
-const logsDir = path.join(__dirname, `../${process.env.DIR_LOGS}`);
+const logsDir = path.join(__dirname, `${process.env.DIR_LOGS}`);
 const latestLogPath = path.join(logsDir, "latest.log");
 
 const levels = {

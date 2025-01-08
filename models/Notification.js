@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const baseSchema = require("./Base");
-const { NOTIFICATION_STATUS } = require("../enum/Fields");
+const { NOTIFICATION_STATUS } = require("#enum/Fields.js");
 
 const notificationSchema = new mongoose.Schema(
   {

@@ -1,4 +1,4 @@
-const { log } = require("../common/Logger");
+const { log } = require("#common/Logger.js");
 log("Interceptor initialized", "DEBUG", "Interceptor");
 /**
  *

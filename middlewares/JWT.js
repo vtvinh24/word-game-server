@@ -1,6 +1,6 @@
-const { verifyToken } = require("../common/JWT");
-const User = require("../models/User");
-const { HTTP_STATUS, CUSTOM_STATUS } = require("../enum/HttpStatus");
+const { verifyToken } = require("#common/JWT.js");
+const User = require("#models/User.js");
+const { CUSTOM_STATUS } = require("#enum/HttpStatus.js");
 
 /**
  * This middleware checks if the user has a valid JWT token, then attaches the user ID and role to the request object
@@ -21,7 +21,7 @@ const JwtMiddleware = async (req, res, next) => {
     const user = await User.findById(decoded.payload);
 
     if (!user) {
-      return res.status(HTTP_STATUS.UNAUTHORIZED.code).json({ message: `${HTTP_STATUS.UNAUTHORIZED.status}: user` });
+      return res.status(401).json({ message: `Unauthorized: user` });
     }
 
     req.userId = user._id;
@@ -29,7 +29,7 @@ const JwtMiddleware = async (req, res, next) => {
     req.authenticated = true;
 
     if(!req.userId || !req.role) {
-      return res.status(HTTP_STATUS.UNAUTHORIZED.code).json({ message: `${HTTP_STATUS.UNAUTHORIZED.status}: invalid token` });
+      return res.status(401).json({ message: `Unauthorized: invalid token` });
     }
 
     next();
@@ -37,7 +37,7 @@ const JwtMiddleware = async (req, res, next) => {
     if (error.name === "TokenExpiredError") {
       return res.status(CUSTOM_STATUS.AUTH_TOKEN_EXPIRED.code).json({ message: CUSTOM_STATUS.AUTH_TOKEN_EXPIRED.status });
     }
-    return res.status(HTTP_STATUS.UNAUTHORIZED.code).json({ message: `${HTTP_STATUS.UNAUTHORIZED.status}: invalid token` });
+    return res.status(401).json({ message: `Unauthorized: invalid token` });
   }
 };
 
@@ -47,7 +47,7 @@ const JwtMiddleware = async (req, res, next) => {
  */
 const requireAuth = async (req, res, next) => {
   if (!req.authenticated) {
-    return res.status(HTTP_STATUS.UNAUTHORIZED.code).json({ message: `${HTTP_STATUS.UNAUTHORIZED.status}: authentication required` });
+    return res.status(401).json({ message: `Unauthorized: authentication required` });
   }
   next();
 };
@@ -62,7 +62,7 @@ const requireRoles = (roles) => {
     if (roles.includes(req.role)) {
       next();
     } else {
-      res.status(HTTP_STATUS.FORBIDDEN.code).json({ message: `${HTTP_STATUS.FORBIDDEN.status}: insufficient permissions` });
+      res.status(403).json({ message: `Forbidden: insufficient permissions` });
     }
   };
 };

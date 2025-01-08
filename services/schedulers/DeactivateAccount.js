@@ -1,6 +1,6 @@
 const cron = require("node-cron");
-const User = require("../../models/User");
-const trigger = require("../config.json").DailyDigest.cron;
+const User = require("#models/User.js");
+const trigger = require("#config/cron.json").DeactivateAccount.cron;
 
 // Every day at midnight, check if any users have not logged in for 30 days
 // and deactivate their accounts

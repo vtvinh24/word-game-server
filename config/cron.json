@@ -1,0 +1,22 @@
+{
+  "DailyDigest": {
+    "enabled": false,
+    "cron": "0 0 0 * * *"
+  },
+  "WeeklyDigest": {
+    "enabled": true,
+    "cron": "0 0 0 * * 0"
+  },
+  "MonthlyDigest": {
+    "enabled": true,
+    "cron": "0 0 0 1 * *"
+  },
+  "DeactivateAccount": {
+    "enabled": true,
+    "cron": "0 0 0 * * *"
+  },
+  "ServiceStatus": {
+    "enabled": true,
+    "cron": "* * * * * *"
+  }
+}

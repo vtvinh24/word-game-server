@@ -1,10 +1,10 @@
 const fs = require("fs");
 const path = require("path");
-const { log } = require("../common/Logger");
+const { log } = require("#common/Logger.js");
 
 // Directory containing the cron scripts
 const schedulersDir = path.join(__dirname, "schedulers");
-const config = require("./config.json");
+const config = require("#config/cron.json")
 
 function initializeCronJobs() {
   // Read the contents of the schedulers directory

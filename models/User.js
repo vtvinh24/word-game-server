@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const baseSchema = require("./Base");
-const { ROLE, USER_STATUS } = require("../enum/Fields");
-const { LOCALE } = require("../enum/Locale");
+const { ROLE, USER_STATUS } = require("#enum/Fields.js");
+const { LOCALE } = require("#enum/Locale.js");
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -45,10 +45,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: null,
   },
-  phone: {
-    type: String,
-    default: null,
-  },
   role: {
     type: String,
     enum: ROLE,
@@ -66,13 +62,10 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: null,
   },
-  address: {
-    type: String,
-    default: null,
-  },
   language: {
     type: String,
-    default: null,
+    enum: LOCALE,
+    default: LOCALE.UNITED_STATES,
   },
   avatar: {
     type: String,

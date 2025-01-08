@@ -8,8 +8,8 @@ require("./common/Mongoose");
 const applyMiddlewares = require("./middlewares");
 applyMiddlewares(app);
 
-const applyRoutes = require("./routes");
-applyRoutes(app);
+const api = require("./api");
+app.use("/api", api)
 
 let port = process.env.APP_PORT || 8000;
 const server = app
@@ -18,7 +18,7 @@ const server = app
   })
   .on("error", handleServerError);
 
-const { init } = require("./common/Io");
+const { init } = require("#common/Io.js");
 init(server);
 
 function handleServerError(err) {

@@ -1,4 +1,4 @@
-const { LOCALE } = require("../enum/Locale");
+const { LOCALE } = require("#enum/Locale.js");
 const { log } = require("./Logger");
 
 const getE164Phone = (phone, locale = LOCALE.VIETNAM) => {

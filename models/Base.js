@@ -50,14 +50,31 @@ function excludeDeleted(next) {
   next();
 }
 
-// baseSchema.pre("find", excludeDeleted);
-// baseSchema.pre("findOne", excludeDeleted);
-// baseSchema.pre("countDocuments", excludeDeleted);
-
-baseSchema.statics.paginate = async function (filter, page, limit, populate = [], select = "") {
+async function applyPagination(query, page, limit) {
   const skip = (page - 1) * limit;
-  const total = await this.countDocuments(filter);
-  let query = this.find(filter).skip(skip).limit(limit);
+  const total = await this.countDocuments(query.getFilter());
+  query.skip(skip).limit(limit);
+  const results = await query;
+
+  return {
+    total,
+    pages: Math.ceil(total / limit),
+    page,
+    limit,
+    results,
+  };
+}
+
+baseSchema.statics.get = async function ({ filter, page = 1, limit = 10, populate = [], select = "" }) {
+  return this.paginate({ filter, page, limit, populate, select, excludeDeleted: true });
+};
+
+baseSchema.statics.paginate = async function ({ filter, page = 1, limit = 10, populate = [], select = "", excludeDeleted = false }) {
+  let query = this.find(filter);
+
+  if (excludeDeleted) {
+    query = query.where({ deletedAt: null });
+  }
 
   if (populate.length > 0) {
     populate.forEach((pop) => {
@@ -69,15 +86,7 @@ baseSchema.statics.paginate = async function (filter, page, limit, populate = []
     query = query.select(select);
   }
 
-  const results = await query;
-
-  return {
-    total,
-    pages: Math.ceil(total / limit),
-    page,
-    limit,
-    results,
-  };
+  return applyPagination.call(this, query, page, limit);
 };
 
 module.exports = baseSchema;
