@@ -17,11 +17,13 @@ async function generateTOTP(user) {
     throw new Error("Invalid user object");
   }
 
+  let label = user.identifier.username;
+
   const secret = generateBase32();
   const totp = new OTPAuth.TOTP({
     algorithm: process.env.TOTP_ALGORITHM || "SHA1",
     issuer: process.env.TOTP_ISSUER,
-    label: process.env.TOTP_LABEL,
+    label: label || process.env.TOTP_LABEL,
     digits: process.env.TOTP_DIGITS || 6,
     period: process.env.TOTP_PERIOD || 30,
     secret,

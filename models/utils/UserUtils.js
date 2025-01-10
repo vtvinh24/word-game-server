@@ -39,21 +39,19 @@ function getFullName(user, reverse = false) {
 }
 
 /**
- * This function generates a username for a user based on email or phone
- *
- * If both params are provided, email will be used
+ * This function generates a username and tag for a user based on email
  *
  * @async
  * @param {string} email The email of the user
  *
- * @returns {string} The generated username
+ * @returns {object} An object containing the generated username and tag
  *
- * @throws {Error} If the user object is invalid
+ * @throws {Error} If the email is invalid
  *
  * @example
  * const user = new User({ email: "abc123@mail.com" });
- * const username = await generateUsername(user.email);
- * console.log(username); // "abc123" if no other user has the similar email/username, otherwise "abc123-1", "abc123-2", etc.
+ * const { username, tag } = await generateUsername(user.email);
+ * console.log(username, tag); // "abc123", "0001" if no other user has the similar email/username
  */
 async function generateUsername(email) {
   if (!email || !isEmail(email)) {
@@ -62,9 +60,28 @@ async function generateUsername(email) {
 
   let username = email.split("@")[0];
 
-  const matchedUsers = await User.find({ username: new RegExp(`^${username}`, "i") }).countDocuments();
+  const matchedUsers = await User.find({ "identifier.username": new RegExp(`^${username}`, "i") }).countDocuments();
+  username += matchedUsers ? `-${matchedUsers}` : "";
 
-  return username + (matchedUsers ? `-${matchedUsers}` : "");
+  const MAX_ATTEMPTS = 10;
+  let attempts = 0;
+  let tag;
+  let isUnique = false;
+
+  while (!isUnique && attempts < MAX_ATTEMPTS) {
+    tag = Math.floor(1000 + Math.random() * 9000).toString();
+    const existingUser = await User.findOne({ "identifier.username": username, "identifier.tag": tag });
+    if (!existingUser) {
+      isUnique = true;
+    }
+    attempts++;
+  }
+
+  if (!isUnique) {
+    throw new Error("Unable to generate a unique tag");
+  }
+
+  return { username, tag };
 }
 
 module.exports = {

@@ -4,18 +4,29 @@ const { ROLE, USER_STATUS } = require("#enum/Fields.js");
 const { LOCALE } = require("#enum/Locale.js");
 
 const userSchema = new mongoose.Schema({
-  username: {
-    type: String,
-    required: true,
-    unique: true,
-    default: null,
-  },
-  tag: {
-    type: String,
-    required: true,
-    default: "0000",
+  identifier: {
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+      default: null,
+    },
+    tag: {
+      type: String,
+      required: true,
+      default: "",
+    },
+    role: {
+      type: String,
+      enum: ROLE,
+      default: ROLE[0],
+    },
   },
   auth: {
+    email: {
+      type: String,
+      default: null,
+    },
     hash: {
       type: String,
       required: true,
@@ -26,73 +37,69 @@ const userSchema = new mongoose.Schema({
       required: true,
       default: undefined,
     },
-    otpSecret: {
-      type: String,
-      default: null,
-    },
-    enable2FA: {
-      type: Boolean,
-      required: true,
-      default: false,
+    twoFactor: {
+      secret: {
+        type: String,
+        default: null,
+      },
+      enabled: {
+        type: Boolean,
+        required: true,
+        default: false,
+      },
     },
     verified: {
       type: Boolean,
       required: true,
       default: false,
     },
+    lastLogin: {
+      type: Date,
+      default: null,
+    },
+    banned: {
+      type: Date,
+      default: null,
+    },
   },
-  email: {
-    type: String,
-    default: null,
+  profile: {
+    firstName: {
+      type: String,
+      default: null,
+    },
+    lastName: {
+      type: String,
+      default: null,
+    },
+    dob: {
+      type: Date,
+      default: null,
+    },
+    language: {
+      type: String,
+      enum: LOCALE,
+      default: LOCALE.UNITED_STATES,
+    },
+    avatar: {
+      type: String,
+      default: null,
+    },
   },
-  role: {
-    type: String,
-    enum: ROLE,
-    default: ROLE[0],
-  },
-  firstName: {
-    type: String,
-    default: null,
-  },
-  lastName: {
-    type: String,
-    default: null,
-  },
-  dob: {
-    type: Date,
-    default: null,
-  },
-  language: {
-    type: String,
-    enum: LOCALE,
-    default: LOCALE.UNITED_STATES,
-  },
-  avatar: {
-    type: String,
-    default: null,
-  },
-  status: {
-    type: String,
-    enum: USER_STATUS,
-    default: USER_STATUS[0],
-  },
-  lastLogin: {
-    type: Date,
-    default: null,
-  },
-  subscribed: {
-    type: Boolean,
-    default: false,
-  },
-  visibility: {
-    type: Boolean,
-    // true if public
-    default: false,
+  settings: {
+    status: {
+      type: String,
+      enum: USER_STATUS,
+      default: USER_STATUS[0],
+    },
+    isPublic: {
+      type: Boolean,
+      default: false,
+    },
   },
 });
 
 userSchema.pre("save", function (next) {
-  if (!this.email && !this.phone && !this.username) {
+  if (!this.email && !this.username) {
     return next(new Error("Either email, phone or username is required"));
   }
   next();
@@ -116,18 +123,11 @@ userSchema.virtual("fullName").get(function (locale = LOCALE.ENGLISH) {
 });
 
 userSchema.virtual("enable2FA").get(function () {
-  return this.auth.enable2FA;
+  return this.auth.twoFactor.enabled;
 });
 
 userSchema.virtual("verified").get(function () {
   return this.auth.verified;
-});
-
-userSchema.virtual("completed").get(function () {
-  if (!this.firstName || !this.lastName || !this.dob || !this.address || !this.country || !this.idType || !this.citizenId) {
-    return false;
-  }
-  return true;
 });
 
 userSchema.add(baseSchema);

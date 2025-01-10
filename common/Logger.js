@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const { format } = require("date-fns");
+// eslint-disable-next-line no-undef
 const logsDir = path.join(__dirname, `${process.env.DIR_LOGS}`);
 const latestLogPath = path.join(logsDir, "latest.log");
 
@@ -11,6 +12,7 @@ const levels = {
   DEBUG: { value: 3, color: "\x1b[34m" }, // Blue
 };
 
+// eslint-disable-next-line no-undef
 const consoleLogLevel = process.env.LOGGER_LEVEL || "INFO";
 
 if (!fs.existsSync(logsDir)) {
@@ -58,6 +60,7 @@ async function flushLogBuffer() {
 
 setInterval(flushLogBuffer, 5000);
 log("Logger initialized", "INFO", "Logger");
+// eslint-disable-next-line no-undef
 process.on("exit", flushLogBuffer);
 
 module.exports = {

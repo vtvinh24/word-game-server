@@ -1,4 +1,5 @@
 const { USER_STATUS, ROLE } = require("#enum/Fields.js");
+const { GAME_MODE } = require("#enum/Game.js");
 const { LOCALE } = require("#enum/Locale.js");
 
 /**
@@ -100,6 +101,15 @@ const isPath = (path) => {
 const isBase64 = (str) => {
   return /^[A-Za-z0-9+/]+={0,2}$/.test(str);
 };
+
+/**
+ * This function checks if the given string is a GAME_MODE enum
+ * @param {string} str 
+ * @returns 
+ */
+const isGameMode = (str) => {
+  return GAME_MODE.includes(str);
+}
 
 module.exports = {
   isEmail,
