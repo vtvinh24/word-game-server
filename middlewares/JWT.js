@@ -1,6 +1,6 @@
 const { verifyToken } = require("#common/JWT.js");
 const User = require("#models/User.js");
-const { CUSTOM_STATUS } = require("#enum/HttpStatus.js");
+const { CUSTOM_HTTP_STATUS } = require("#enum/HttpStatus.js");
 
 /**
  * This middleware checks if the user has a valid JWT token, then attaches the user ID and role to the request object
@@ -35,7 +35,7 @@ const JwtMiddleware = async (req, res, next) => {
     next();
   } catch (error) {
     if (error.name === "TokenExpiredError") {
-      return res.status(CUSTOM_STATUS.AUTH_TOKEN_EXPIRED.code).json({ message: CUSTOM_STATUS.AUTH_TOKEN_EXPIRED.status });
+      return res.status(CUSTOM_HTTP_STATUS.AUTH_TOKEN_EXPIRED.code).json({ message: CUSTOM_HTTP_STATUS.AUTH_TOKEN_EXPIRED.status });
     }
     return res.status(401).json({ message: `Unauthorized: invalid token` });
   }

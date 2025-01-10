@@ -1,4 +1,5 @@
 const { isEmail } = require("#common/Validator.js");
+const { TagNotGeneratedError, EmailInvalidError } = require("#enum/Error.js");
 const User = require("#models/User.js");
 
 /**
@@ -53,9 +54,10 @@ function getFullName(user, reverse = false) {
  * const { username, tag } = await generateUsername(user.email);
  * console.log(username, tag); // "abc123", "0001" if no other user has the similar email/username
  */
-async function generateUsername(email) {
+async function generateIdentifier(email) {
   if (!email || !isEmail(email)) {
-    throw new Error("Invalid email");
+    throw EmailInvalidError;
+    
   }
 
   let username = email.split("@")[0];
@@ -78,7 +80,7 @@ async function generateUsername(email) {
   }
 
   if (!isUnique) {
-    throw new Error("Unable to generate a unique tag");
+    throw TagNotGeneratedError;
   }
 
   return { username, tag };
@@ -87,5 +89,5 @@ async function generateUsername(email) {
 module.exports = {
   filteredUser,
   getFullName,
-  generateUsername,
+  generateIdentifier,
 };

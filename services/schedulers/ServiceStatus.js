@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
 const cron = require("node-cron");
 const trigger = require("#config/cron.json").ServiceStatus.cron;
 const readline = require("readline");

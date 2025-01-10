@@ -1,8 +1,14 @@
-// Generic errors
+// Data errors
 const USER_NOT_FOUND = "User not found";
 const userNotFoundError = new Error(USER_NOT_FOUND);
 
-// Business errors
+const TAG_NOT_GENERATED = "Tag not generated";
+const TagNotGeneratedError = new Error(TAG_NOT_GENERATED);
+
+const EMAIL_INVALID = "Invalid email";
+const EmailInvalidError = new Error(EMAIL_INVALID);
+
+// Auth errors
 const OTP_SECRET_ERROR = "Missing or invalid OTP secret";
 const OtpSecretError = new Error(OTP_SECRET_ERROR);
 
@@ -19,4 +25,8 @@ module.exports = {
   SOCKET_NOT_INITIALIZED,
   SOCKET_AUTH_ERROR,
   socketAuthError,
+  TAG_NOT_GENERATED,
+  TagNotGeneratedError,
+  EMAIL_INVALID,
+  EmailInvalidError,
 };

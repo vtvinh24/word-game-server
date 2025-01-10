@@ -1,7 +1,7 @@
 const { log } = require("#common/Logger.js");
 const { generateTOTP, verifyTOTP } = require("#common/OTPAuth.js");
 const { OtpSecretError } = require("#enum/Error.js");
-const { CUSTOM_STATUS } = require("#enum/HttpStatus.js");
+const { CUSTOM_HTTP_STATUS } = require("#enum/HttpStatus.js");
 const User = require("#models/User.js");
 
 const generate2FA = async (req, res) => {
@@ -44,10 +44,10 @@ const toggle2FA = async (req, res) => {
       await user.save();
       return res.status(200).send();
     }
-    return res.status(CUSTOM_STATUS.AUTH_2FA_INVALID.code).json({ message: CUSTOM_STATUS.AUTH_2FA_INVALID.status });
+    return res.status(CUSTOM_HTTP_STATUS.AUTH_2FA_INVALID.code).json({ message: CUSTOM_HTTP_STATUS.AUTH_2FA_INVALID.status });
   } catch (err) {
     if (err === OtpSecretError) {
-      return res.status(CUSTOM_STATUS.AUTH_2FA_DISABLED.code).json({ message: CUSTOM_STATUS.AUTH_2FA_DISABLED.status });
+      return res.status(CUSTOM_HTTP_STATUS.AUTH_2FA_DISABLED.code).json({ message: CUSTOM_HTTP_STATUS.AUTH_2FA_DISABLED.status });
     }
     log(err, "ERROR", "routes POST /auth/2fa/toggle");
     return res.status(500).send();
@@ -70,7 +70,7 @@ const verify2FA = async (req, res) => {
     if (enabled) {
       const valid = await verifyTOTP(user, code);
       if (valid) return res.status(200).send();
-      else return res.status(CUSTOM_STATUS.AUTH_2FA_INVALID.code).json({ message: CUSTOM_STATUS.AUTH_2FA_INVALID.status });
+      else return res.status(CUSTOM_HTTP_STATUS.AUTH_2FA_INVALID.code).json({ message: CUSTOM_HTTP_STATUS.AUTH_2FA_INVALID.status });
     } else {
       return res.status(403).send();
     }

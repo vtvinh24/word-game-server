@@ -34,5 +34,21 @@ const roomSchema = new mongoose.Schema({
 
 roomSchema.add(baseSchema);
 
+// player join function
+roomSchema.methods.join = function (playerId) {
+  this.players.push(playerId);
+};
+
+// player leave function
+roomSchema.methods.leave = function (playerId) {
+  this.players = this.players.filter((id) => id.toString() !== playerId.toString());
+};
+
+// close room function
+roomSchema.methods.close = function () {
+  this.status = "closed";
+  this.players = [];
+};
+
 const Room = mongoose.model("Room", roomSchema);
 module.exports = Room;
