@@ -52,8 +52,6 @@ const gameSchema = new mongoose.Schema(
   }
 );
 
-gameSchema.virtuals
-
 gameSchema.add(baseSchema);
 
 const Game = mongoose.model("Game", gameSchema);

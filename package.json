@@ -23,10 +23,14 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development node --env-file=dev.env --watch app.js",
     "test": "jest",
-    "start": "cross-env NODE_ENV=production node --env-file=prod.env app.js"
+    "start": "cross-env NODE_ENV=production node --env-file=prod.env app.js",
+    "lint": "eslint . --ext .js"
   },
   "devDependencies": {
+    "@eslint/js": "^9.18.0",
     "cross-env": "^7.0.3",
+    "eslint": "^9.18.0",
+    "eslint-plugin-vitest": "^0.5.4",
     "globals": "^15.14.0",
     "jest": "^29.7.0"
   },

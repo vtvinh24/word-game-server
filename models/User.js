@@ -98,13 +98,6 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-userSchema.pre("save", function (next) {
-  if (!this.email && !this.username) {
-    return next(new Error("Either email, phone or username is required"));
-  }
-  next();
-});
-
 // lowercase email before saving
 userSchema.pre("save", function (next) {
   if (this.email) {

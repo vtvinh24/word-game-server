@@ -21,6 +21,7 @@ const createRoom = async (req, res) => {
   } catch (e) {
     log(e, "ERROR", "POST /api/v1/rooms");
     res.status(500).send();
+    
   }
 };
 

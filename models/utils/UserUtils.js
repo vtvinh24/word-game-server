@@ -11,7 +11,11 @@ function filteredUser(user) {
   if (!(user instanceof User)) {
     throw new Error("Invalid user object");
   }
+
+  /* eslint-disable-next-line no-unused-vars */
   const { auth, ...userWithoutAuth } = user.toObject();
+
+  /* eslint-disable-next-line no-unused-vars */
   const filtered = Object.fromEntries(Object.entries(userWithoutAuth).filter(([_, v]) => v != null));
   return filtered;
 }
@@ -57,7 +61,6 @@ function getFullName(user, reverse = false) {
 async function generateIdentifier(email) {
   if (!email || !isEmail(email)) {
     throw EmailInvalidError;
-    
   }
 
   let username = email.split("@")[0];
@@ -71,7 +74,9 @@ async function generateIdentifier(email) {
   let isUnique = false;
 
   while (!isUnique && attempts < MAX_ATTEMPTS) {
-    tag = Math.floor(1000 + Math.random() * 9000).toString();
+    const highestTagUser = await User.findOne({ "identifier.username": username }).sort({ "identifier.tag": -1 });
+    tag = highestTagUser ? (parseInt(highestTagUser.identifier.tag) + 1).toString() : "000001";
+
     const existingUser = await User.findOne({ "identifier.username": username, "identifier.tag": tag });
     if (!existingUser) {
       isUnique = true;
