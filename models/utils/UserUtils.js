@@ -65,8 +65,8 @@ async function generateIdentifier(email) {
 
   let username = email.split("@")[0];
 
-  const matchedUsers = await User.find({ "identifier.username": new RegExp(`^${username}`, "i") }).countDocuments();
-  username += matchedUsers ? `-${matchedUsers}` : "";
+  // const matchedUsers = await User.find({ "identifier.username": new RegExp(`^${username}`, "i") }).countDocuments();
+  // username += matchedUsers ? `-${matchedUsers}` : "";
 
   const MAX_ATTEMPTS = 10;
   let attempts = 0;
@@ -75,7 +75,7 @@ async function generateIdentifier(email) {
 
   while (!isUnique && attempts < MAX_ATTEMPTS) {
     const highestTagUser = await User.findOne({ "identifier.username": username }).sort({ "identifier.tag": -1 });
-    tag = highestTagUser ? (parseInt(highestTagUser.identifier.tag) + 1).toString() : "000001";
+    tag = highestTagUser ? (parseInt(highestTagUser.identifier.tag) + 1).toString() : 1;
 
     const existingUser = await User.findOne({ "identifier.username": username, "identifier.tag": tag });
     if (!existingUser) {

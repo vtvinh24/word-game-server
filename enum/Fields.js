@@ -6,6 +6,7 @@ const { ROLE: ROLES } = require("./Role");
 // User
 const ROLE = [ROLES.PLAYER, ROLES.SUPPORT, ROLES.MANAGER, ROLES.ADMIN];
 const USER_STATUS = ["REGISTERED", "ACTIVE", "INACTIVE"];
+const LANGUAGE = ["ENGLISH", "VIETNAMESE"]
 
 // Notification
 const NOTIFICATION_STATUS = ["SENT", "SEEN"];
@@ -14,4 +15,5 @@ module.exports = {
   ROLE,
   USER_STATUS,
   NOTIFICATION_STATUS,
+  LANGUAGE,
 };

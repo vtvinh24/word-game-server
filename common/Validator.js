@@ -1,6 +1,5 @@
-const { USER_STATUS, ROLE } = require("#enum/Fields.js");
+const { USER_STATUS, ROLE, LANGUAGE } = require("#enum/Fields.js");
 const { GAME_MODE } = require("#enum/Game.js");
-const { LOCALE } = require("#enum/Locale.js");
 
 /**
  * This function checks if the given email is valid
@@ -39,22 +38,8 @@ const isAlphaNumeric = (str) => {
   return /^[a-zA-Z0-9]+$/.test(str);
 };
 
-/**
- * This function checks if the given country is valid
- * @param {string} country
- * @returns {boolean}
- */
-const isCountry = (country) => {
-  return Object.keys(LOCALE).includes(country);
-};
-
-/**
- * This function checks if the given country code is valid
- * @param {string} countryCode
- * @returns {boolean}
- */
-const isCountryCode = (countryCode) => {
-  return Object.values(LOCALE).includes(countryCode);
+const isLanguage = (str) => {
+  return LANGUAGE.includes(str);
 };
 
 /**
@@ -104,23 +89,23 @@ const isBase64 = (str) => {
 
 /**
  * This function checks if the given string is a GAME_MODE enum
- * @param {string} str 
- * @returns 
+ * @param {string} str
+ * @returns
  */
 const isGameMode = (str) => {
   return GAME_MODE.includes(str);
-}
+};
 
 module.exports = {
   isEmail,
   isMongoId,
   isNumeric,
   isAlphaNumeric,
-  isCountry,
-  isCountryCode,
+  isLanguage,
   isRole,
   isUserStatus,
   isUrl,
   isPath,
   isBase64,
+  isGameMode,
 };

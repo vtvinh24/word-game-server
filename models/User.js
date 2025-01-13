@@ -1,14 +1,13 @@
 const mongoose = require("mongoose");
 const baseSchema = require("./Base");
-const { ROLE, USER_STATUS } = require("#enum/Fields.js");
-const { LOCALE } = require("#enum/Locale.js");
+const { ROLE, USER_STATUS, LANGUAGE } = require("#enum/Fields.js");
 
 const userSchema = new mongoose.Schema({
   identifier: {
     username: {
       type: String,
       required: true,
-      unique: true,
+      unique: false,
       default: null,
     },
     tag: {
@@ -16,13 +15,13 @@ const userSchema = new mongoose.Schema({
       required: true,
       default: "",
     },
+  },
+  auth: {
     role: {
       type: String,
       enum: ROLE,
       default: ROLE[0],
     },
-  },
-  auth: {
     email: {
       type: String,
       default: null,
@@ -83,8 +82,8 @@ const userSchema = new mongoose.Schema({
   settings: {
     language: {
       type: String,
-      enum: LOCALE,
-      default: LOCALE.UNITED_STATES,
+      enum: LANGUAGE,
+      default: LANGUAGE[0],
     },
     status: {
       type: String,
@@ -106,13 +105,11 @@ userSchema.pre("save", function (next) {
   next();
 });
 
-userSchema.virtual("fullName").get(function (locale = LOCALE.ENGLISH) {
-  switch (locale) {
-    case LOCALE.VIETNAM:
-      return `${this.lastName} ${this.firstName}`;
-    default:
-      return `${this.firstName} ${this.lastName}`;
+userSchema.virtual("fullName").get(function (reversed = false) {
+  if (reversed) {
+    return `${this.profile.lastName} ${this.profile.firstName}`;
   }
+  return `${this.profile.firstName} ${this.profile.lastName}`;
 });
 
 userSchema.virtual("enable2FA").get(function () {
