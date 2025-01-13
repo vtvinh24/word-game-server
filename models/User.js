@@ -75,17 +75,17 @@ const userSchema = new mongoose.Schema({
       type: Date,
       default: null,
     },
-    language: {
-      type: String,
-      enum: LOCALE,
-      default: LOCALE.UNITED_STATES,
-    },
     avatar: {
       type: String,
       default: null,
     },
   },
   settings: {
+    language: {
+      type: String,
+      enum: LOCALE,
+      default: LOCALE.UNITED_STATES,
+    },
     status: {
       type: String,
       enum: USER_STATUS,
