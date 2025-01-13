@@ -20,7 +20,7 @@ const roomSchema = new mongoose.Schema({
   ownerId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    required: true,
+    required: false,
   },
 
   settings: roomSettingsSchema,
@@ -33,6 +33,11 @@ const roomSchema = new mongoose.Schema({
 });
 
 roomSchema.add(baseSchema);
+
+roomSchema.pre("remove", async function (next) {
+  await this.model("Conversation").deleteMany({ roomId: this._id });
+  next();
+});
 
 const Room = mongoose.model("Room", roomSchema);
 module.exports = Room;

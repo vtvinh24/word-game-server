@@ -15,13 +15,12 @@ const createRoom = async (req, res) => {
         gameMode,
       },
     });
-    room.ownerId = req.user._id;
+    room.ownerId = req.userId;
     await room.save();
     res.status(201).json(room);
   } catch (e) {
     log(e, "ERROR", "POST /api/v1/rooms");
     res.status(500).send();
-    
   }
 };
 

@@ -1,7 +1,7 @@
 const { log } = require("#common/Logger.js");
 const Room = require("#models/Room.js");
 
-const JoinRoom = async (req, res) => {
+const leaveRoom = async (req, res) => {
   try {
     const { roomId } = req.body;
     const userId = req.userId;
@@ -9,16 +9,16 @@ const JoinRoom = async (req, res) => {
     if (!room) {
       return res.status(404).send();
     }
-    if (room.users.includes(userId)) {
+    if (!room.users.includes(userId)) {
       return res.status(400).send();
     }
-    room.users.push(userId);
+    room.users = room.users.filter((user) => user !== userId);
     await room.save();
     res.status(200).send();
   } catch (e) {
-    log(e, "ERROR", "GET /api/v1/rooms/:id/join");
+    log(e, "ERROR", "GET /api/v1/rooms/:id/leave");
     res.status(500).send();
   }
 };
 
-module.exports = { JoinRoom };
+module.exports = { leaveRoom };

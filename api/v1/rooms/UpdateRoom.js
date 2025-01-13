@@ -1,5 +1,5 @@
 const { log } = require("#common/Logger.js");
-const Room = require("#models/Room");
+const Room = require("#models/Room.js");
 const { isNumeric, isGameMode } = require("#common/Validator.js");
 
 const updateRoom = async (req, res) => {

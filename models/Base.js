@@ -33,17 +33,19 @@ baseSchema.virtual("isDeleted").get(function () {
   return this.deletedAt !== null;
 });
 
-baseSchema.methods.softDelete = function (deletedBy) {
+// on delete, set the deletedAt field instead of actually deleting the document
+baseSchema.pre("remove", async function (next) {
   this.deletedAt = new Date();
-  this.deletedBy = deletedBy;
-  return this.save();
-};
+  // this.deletedBy = req.userId;
+  if (!this.deletedBy) {
+    throw new Error("deletedBy is required");
+  }
+  await this.save();
+  next();
+});
 
-baseSchema.methods.restore = function () {
-  this.deletedAt = null;
-  this.deletedBy = null;
-  return this.save();
-};
+baseSchema.pre("find", excludeDeleted);
+baseSchema.pre("findOne", excludeDeleted);
 
 function excludeDeleted(next) {
   this.where({ deletedAt: null });
