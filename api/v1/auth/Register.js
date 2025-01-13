@@ -3,9 +3,7 @@ const User = require("#models/User.js");
 const { getHash, generateSalt } = require("#common/Hasher.js");
 const { createToken } = require("#common/JWT.js");
 const { filteredUser, generateIdentifier } = require("#models/utils/UserUtils.js");
-const { isEmail, isAlphaNumeric } = require("#common/Validator.js");
-const { sendMail } = require("#common/Mailer.js");
-const { ROLE } = require("#enum/Role.js");
+const { isEmail } = require("#common/Validator.js");
 const { getComplexity } = require("#common/Password.js");
 const ENV = require("#enum/Env.js");
 const { TagNotGeneratedError } = require("#enum/Error.js");
@@ -15,11 +13,11 @@ const register = async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-      return res.status(400).send();
+      return res.status(400).json({ message: "Email and password are required" });
     }
 
-    if (!isEmail(email) || !isAlphaNumeric(password)) {
-      return res.status(400).send();
+    if (!isEmail(email)) {
+      return res.status(400).json({ message: "Invalid email" });
     }
 
     const user = await User.findOne({ "auth.email": email });
