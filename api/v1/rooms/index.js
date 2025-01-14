@@ -9,12 +9,6 @@ const { getRooms, getRoom } = require("./GetRoom");
 router.get("/", requireAuth, getRooms);
 router.get("/:id", requireAuth, getRoom);
 
-const { JoinRoom } = require("./JoinRoom");
-router.get("/:id/join", requireAuth, JoinRoom);
-
-const { leaveRoom } = require("./LeaveRoom");
-router.get("/:id/leave", requireAuth, leaveRoom);
-
 const { updateRoom } = require("./UpdateRoom");
 const { deleteRoom } = require("./DeleteRoom");
 router.patch("/:id", requireAuth, updateRoom);

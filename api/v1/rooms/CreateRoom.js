@@ -1,5 +1,6 @@
 const { log } = require("#common/Logger.js");
 const Room = require("#models/Room.js");
+const { emitToRoom } = require("#common/Io.js");
 
 const createRoom = async (req, res) => {
   try {
@@ -17,6 +18,9 @@ const createRoom = async (req, res) => {
     });
     room.ownerId = req.userId;
     await room.save();
+
+    emitToRoom(room._id.toString(), "roomCreated", room);
+
     res.status(201).json(room);
   } catch (e) {
     log(e, "ERROR", "POST /api/v1/rooms");

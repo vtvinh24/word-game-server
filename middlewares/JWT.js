@@ -27,7 +27,7 @@ const JwtMiddleware = async (req, res, next) => {
     }
 
     req.userId = user._id;
-    req.role = user.role;
+    req.role = user.auth.role;
     req.authenticated = true;
 
     if(!req.userId || !req.role) {

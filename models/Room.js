@@ -14,7 +14,21 @@ const roomSettingsSchema = new mongoose.Schema({
     enum: GAME_MODE,
     default: GAME_MODE[0],
   },
+  isPublic: { type: Boolean, required: true, default: false },
 });
+
+const generateUniqueCode = async () => {
+  let code;
+  let isUnique = false;
+  while (!isUnique) {
+    code = Math.random().toString(36).substring(2, 6).toUpperCase();
+    const existingRoom = await mongoose.models.Room.findOne({ code });
+    if (!existingRoom) {
+      isUnique = true;
+    }
+  }
+  return code;
+};
 
 const roomSchema = new mongoose.Schema({
   ownerId: {
@@ -22,7 +36,12 @@ const roomSchema = new mongoose.Schema({
     ref: "User",
     required: false,
   },
-
+  name: { type: String, required: false },
+  code: {
+    type: String,
+    unique: true,
+    required: false,
+  },
   settings: roomSettingsSchema,
   players: [
     {
@@ -33,6 +52,13 @@ const roomSchema = new mongoose.Schema({
 });
 
 roomSchema.add(baseSchema);
+
+roomSchema.pre("save", async function (next) {
+  if (!this.code) {
+    this.code = await generateUniqueCode();
+  }
+  next();
+});
 
 roomSchema.pre("remove", async function (next) {
   await this.model("Conversation").deleteMany({ roomId: this._id });

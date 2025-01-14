@@ -6,6 +6,7 @@ const User = require("#models/User.js");
 const { verifyToken } = require("./JWT");
 let io;
 const users = new Map();
+const rooms = new Map();
 
 function getCorsConfig() {
   return {
@@ -41,19 +42,41 @@ function init(server) {
     const userId = socket.userId;
     users.set(userId, socket.id);
 
+    socket.on("joinRoom", (roomId) => {
+      socket.join(roomId);
+      if (!rooms.has(roomId)) {
+        rooms.set(roomId, new Set());
+      }
+      rooms.get(roomId).add(userId);
+    });
+
+    socket.on("leaveRoom", (roomId) => {
+      socket.leave(roomId);
+      if (rooms.has(roomId)) {
+        rooms.get(roomId).delete(userId);
+      }
+    });
+
     socket.on("disconnect", () => {
       users.delete(userId);
+      rooms.forEach((members, roomId) => {
+        members.delete(userId);
+        if (members.size === 0) {
+          rooms.delete(roomId);
+        }
+      });
+    });
+
+    socket.on("roomCreated", (room) => {
+      if (!rooms.has(room._id.toString())) {
+        rooms.set(room._id.toString(), new Set());
+      }
     });
   });
 
   return io;
 }
 
-/**
- *
- * @param {string} event
- * @param {object} data
- */
 function emit(event, data) {
   if (io) {
     io.emit(event, data);
@@ -62,20 +85,6 @@ function emit(event, data) {
   }
 }
 
-/**
- * Emit an event to a specific user
- * @param {string} userId - User._id
- * @param {string} event - The event name
- * @param {object} data - The data to send
- * @example
- * // client
- * const socket = io(SERVER_URL, {
- *   query: {
- *     userId
- *   }
- * });
- */
-// Note: To add userId to the socket connection, you can use the query parameter in the connection URL.
 function emitToUser(userId, event, data) {
   if (io) {
     const socketId = users.get(userId);
@@ -89,4 +98,12 @@ function emitToUser(userId, event, data) {
   }
 }
 
-module.exports = { init, emit, emitToUser };
+function emitToRoom(roomId, event, data) {
+  if (io) {
+    io.to(roomId).emit(event, data);
+  } else {
+    log(SOCKET_NOT_INITIALIZED, "ERROR", "Socket");
+  }
+}
+
+module.exports = { init, emit, emitToUser, emitToRoom };
