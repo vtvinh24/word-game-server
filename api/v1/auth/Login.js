@@ -5,7 +5,6 @@ const { createToken } = require("#common/JWT.js");
 const { isEmail } = require("#common/Validator.js");
 const { CUSTOM_HTTP_STATUS } = require("#enum/HttpStatus.js");
 const { verifyTOTP } = require("#common/OTPAuth.js");
-const { USER_STATUS } = require("#enum/Fields.js");
 const ENV = require("#enum/Env.js");
 
 const login = async (req, res) => {
