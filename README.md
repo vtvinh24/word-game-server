@@ -1,2 +1,2 @@
 # wordle-server
- Back-end for react-wordle
+Back-end for word-game
